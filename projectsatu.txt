@@ -1,0 +1,92 @@
+1) install OraODBC_64
+
+2) xampp/php/php.ini --> paste extension=php_oci8_11g.dll --> SAVE
+
+3) xampp/php/ext --> paste file php_oci8_12c.dll
+
+-- https://github.com/yajra/laravel-oci8
+4) composer require yajra/laravel-oci8:"^6.0"
+
+5) php artisan vendor:publish --tag=oracle
+
+6) composer require barryvdh/laravel-dompdf
+
+6) edit config/database.php
+
+	6.1 ) 'default' => env('DB_CONNECTION', 'mysql'), mysql --> oracle
+	6.2 )oracle' => [ 'driver' => 'oracle', 'host' => 'oracle.host', 'port' => '1521', 'database' => 'xe', 'service_name' => 'sid_alias', 'username' => 'hr', 'password' => 'hr', 'charset' => '', 'prefix' => '', ]
+
+7) env.ini
+	DB_CONNECTION=oracle
+	DB_HOST=161.139.21.21
+	DB_PORT=1521
+	DB_DATABASE=SMUDEV
+	DB_USERNAME=STDNACC
+	DB_PASSWORD=870N4EEN
+
+8) create models inside Models
+   php artisan make:model /Models/ReferenceNo
+
+8.1) create controller inside Controller
+   php artisan make:controller TypeController --resource
+   
+9) paste inside ReferenceNo
+    
+	protected $table = 'SA_REFERENCE_NO';
+    
+    protected $fillable = [ 'ID' ,'CODE' ,'DESCRIPTION' ,'CAMPUS_CODE' ,'YEAR' ,'PREFIX' ,'SEQUENCE_FORMAT' ,'CURRENT_VALUE' ,'INCREMENT_VALUE' ,'M_ST' ,'C_ID' ,'C_TS' ,'M_ID' ,'M_TS' ,'D_ID' ,'D_TS'];
+    
+   
+10) composer dumpautoload
+
+11) php artisan tinker
+>>> use App\Models\ReferenceNo
+>>> ReferenceNo::all()
+
+
+12) install debugBar
+    composer require barryvdh/laravel-debugbar --dev
+
+13) install Telescope
+>> composer.json --> tukar "laravel/framework": "5.7.*", KEPADA "laravel/framework": "5.8.*",
+>> composer update
+>> composer require laravel/telescope
+>> php artisan telescope:install
+>> php artisan migrate
+>> php artisan telescope:publish
+>> to run --> url/telescope
+
+14) Create emel
+    i) php artisan make:mail SendNotificationEmail(nama emel)
+    ii) create template emel : resources - views - email - [nama template emel]
+
+15) Create export excel
+    i) php artisan make:export AdminRegisterExport(nama fail excel)
+    ii) create template 
+
+
+==============================================================================
+Error pada 16/12/2019 : So solution nye... [error zizaco]
+
+1) composer require hymns/entrust "^1.1"
+2) config --> session.php [En.wan dah betulkan]
+   - 'connection' => env('SESSION_CONNECTION', 'oracle_acl') TUKAR kepada 
+     'connection' => env('SESSION_CONNECTION', null),
+
+   - 'driver' => env('SESSION_DRIVER', 'file'),
+
+3) composer dumpautoload
+4) php artisan config:cache [clear cache]
+
++++++++++++++++++
+
+Step clone folder projek
+
+1) clone - Clone with HTTPS
+2) copy folder cache -> bootstrapt
+3) copy composer.lock / composer.json
+4) composer install
+5) composer update
+6) php artisan config:cache
+7) php artisan optimize
+8) php artisan serve
